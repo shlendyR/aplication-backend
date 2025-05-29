@@ -10,7 +10,7 @@ export async function getAllCategory() {
   }
 }
 
-export async function getCategoryById(id) {
+export async function getCategoryById() {
   try {
     const result = await pool.query(
       "SELECT id, name FROM category WHERE id = $1",
@@ -58,7 +58,7 @@ export async function updateCategory(id, data) {
 
     // Crear el SET dinámicamente: name = $1, ...
     const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(", ");
-    const query = `UPDATE category SET ${setClause} WHERE id = $${
+    const query = `UPDATE categori SET ${setClause} WHERE id = $${
       keys.length + 1
     } RETURNING *`;
 

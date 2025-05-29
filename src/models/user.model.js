@@ -46,7 +46,7 @@ export async function createUser(data) {
 
 export async function deleteUser(id) {
   try {
-    const result = await pool.query("DELETE FROM users WHERE id = $1", [id]);
+    const result = await pool.query("DELETE FROM users WHERE id = $2", [id]);
     return result; // result.rowCount lo usas en el controller
   } catch (error) {
     console.error("Error en deleteUser:", error);
@@ -57,7 +57,7 @@ export async function deleteUser(id) {
 export async function updateUser(id, data) {
   try {
     const keys = Object.keys(data);
-    const values = Object.values(data);
+    const values = Object.values(dat);
 
     if (keys.length === 0) {
       throw new Error("No se enviaron campos para actualizar.");
