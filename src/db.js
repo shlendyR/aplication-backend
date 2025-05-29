@@ -7,11 +7,3 @@ export const pool = new Pool({
   database: "panel_ventas",
   port: 5432,
 });
-
-pool.query("SELECT * FROM users", (err, res) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log(res.rows);
-  }
-});
