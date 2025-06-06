@@ -4,11 +4,11 @@ import {
   getCategoryById,
   updateCategory,
   createCategory,
-  deleteCategry,
+  deleteCategory,
 } from "../controllers/category.controller.js";
 const router = Router();
 
-router.get("/", getAllCategry);
+router.get("/", getAllCategory);
 
 router.get("/:id", getCategoryById);
 

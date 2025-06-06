@@ -1,7 +1,7 @@
 import {
   getAllCategory as categoryModel,
   getCategoryById as getCategoryByIdModel,
-  createCategory,
+  createCategory as createCategoryModel,
   deleteCategory as deleteCategoryModel,
   updateCategory as updateCategoryModel,
 } from "../models/category.model.js";
@@ -34,7 +34,7 @@ export const getCategoryById = async (req, res) => {
   }
 };
 
-export const createCategory = async (re, res) => {
+export const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
 

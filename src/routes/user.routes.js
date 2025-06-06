@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getAllUsers,
   getUserById,
-  updatUser,
+  updateUser,
   createUser,
   deleteUser,
 } from "../controllers/user.controller.js";
@@ -16,6 +16,6 @@ router.post("/", createUser);
 
 router.delete("/:id", deleteUser);
 
-router.put("/", updateUser);
+router.put("/:id", updateUser);
 
 export default router;

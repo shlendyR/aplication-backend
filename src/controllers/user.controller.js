@@ -35,7 +35,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const creatUser = async (req, res) => {
+export const createUser = async (req, res) => {
   try {
     const { name, email, password, phone, birthdate, id_rol } = req.body;
 
@@ -76,7 +76,7 @@ export const creatUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const { id } = req.param;
+    const { id } = req.params;
     const { rowCount } = await deleteUserModel(id);
 
     if (rowCount === 0) {
