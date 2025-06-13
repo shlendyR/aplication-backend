@@ -1,21 +1,25 @@
-import { Router } from "express";
+import express from "express";
 import {
   getAllUsers,
   getUserById,
   updateUser,
-  createUser,
   deleteUser,
+  createUser,
 } from "../controllers/user.controller.js";
-const router = Router();
+import { verifyToken } from '../middlewares/auth.js'
+import { validate } from '../middlewares/validateInput.js'
+
+const router = express.Router();
+
+
+router.post("/",verifyToken,validate(),createUser);
 
 router.get("/", getAllUsers);
 
 router.get("/:id", getUserById);
 
-router.post("/", createUser);
+router.delete("/:id",verifyToken,deleteUser);
 
-router.delete("/:id", deleteUser);
-
-router.put("/:id", updateUser);
+router.put("/:id",verifyToken,validate(),updateUser);
 
 export default router;

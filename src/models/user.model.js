@@ -1,78 +1,131 @@
-import { pool } from "../db.js";
+import { prisma, Prisma } from "../config/db.js";
+import { createError } from "../utils/errors.js";
+import { validateAndConvertId } from "../utils/validate.js";
+import { BcryptAdapter } from "../adapters/bcryptAdapter.js";
 
-export async function getAllUsers() {
-  try {
-    const result = await pool.query("SELECT * FROM users");
-    return result;
-  } catch (error) {
-    console.error("Error en getAllUsers:", error);
-    throw error;
-  }
-}
 
-export async function getUserById(id) {
+export const createUser = async (reqBody) => {
   try {
-    const result = await pool.query(
-      "SELECT name, email, phone, birthdate, id_rol FROM users WHERE id = $1",
-      [id]
-    );
-    return result;
-  } catch (error) {
-    console.error("Error en getUserById:", error);
-    throw error;
-  }
-}
+    const { name, email, password, birthdate, id_rol, phone } = reqBody;
+    const hashedPassword = await BcryptAdapter.hash(password);
+    const data = {
+      name,
+      email,
+      password: hashedPassword,
+      birthdate: new Date(birthdate),
+      id_rol,
+      phone,
+    };
 
-export async function createUser(data) {
-  try {
-    const { rows } = await pool.query(
-      `INSERT INTO users (name, email, password, phone, birthdate, id_rol)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [
-        data.name,
-        data.email,
-        data.password,
-        data.phone,
-        data.birthdate,
-        data.id_rol,
-      ]
-    );
-    return rows[0];
+    const user = await prisma.user.create({
+      data,
+      include: {
+        rol: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return user;
   } catch (error) {
     console.error("Error en createUser:", error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002" &&
+      error.meta?.target?.includes("email") // verifica que es el campo email
+    ) {
+      throw createError("EMAIL_IN_USE");
+    }
+    throw createError("INTERNAL_SERVER_ERROR");
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        rol: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    return users;
+  } catch (error) {
+    throw createError("INTERNAL_SERVER_ERROR");
+  }
+};
+
+export const getUserById = async (id) => {
+  const numericId = validateAndConvertId(id);
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: numericId },
+      include: {
+        rol: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw createError("RECORD_NOT_FOUND");
+    }
+
+    return user;
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw createError("RECORD_NOT_FOUND");
+    }
+
     throw error;
   }
-}
+};
 
 export async function deleteUser(id) {
   try {
-    const result = await pool.query("DELETE FROM users WHERE id = $1", [id]);
-    return result; // result.rowCount lo usas en el controller
+    const numericId = validateAndConvertId(id);
+    const deleteUser = await prisma.user.delete({
+      where: { id: numericId },
+    });
+    return deleteUser;
   } catch (error) {
-    console.error("Error en deleteUser:", error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw createError("RECORD_NOT_FOUND");
+    }
+
     throw error;
   }
 }
 
 export async function updateUser(id, data) {
   try {
-    const keys = Object.keys(data);
-    const values = Object.values(data);
+    const numericId = validateAndConvertId(id);
 
-    if (keys.length === 0) {
-      throw new Error("No se enviaron campos para actualizar.");
+    const updatedUser = await prisma.user.update({
+      where: { id: numericId },
+      data,
+    });
+
+    return updatedUser;
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw createError("RECORD_NOT_FOUND");
     }
 
-    const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(", ");
-    const query = `UPDATE users SET ${setClause} WHERE id = $${
-      keys.length + 1
-    } RETURNING *`;
-
-    values.push(id);
-    const result = await pool.query(query, values);
-    return result;
-  } catch (error) {
-    console.error("Error en updateUser:", error);
     throw error;
   }
 }

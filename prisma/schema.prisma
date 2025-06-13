@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int  @id @default(autoincrement())
+  email     String   @unique
+  name      String @db.VarChar(50) @default("Unknown")
+  phone        String?  @unique @db.VarChar(20)
+  password  String
+  birthdate  DateTime
+  id_rol Int
+  //relaciones
+  rol Rol @relation(fields: [id_rol], references: [id]) // relacion donde actua la forania
+}
+
+model Rol {
+  id        Int  @id @default(autoincrement())
+  name      String
+  //relaciones
+  users User[] // "Un rol puede tener varios usuarios asociados." 
+}
+model Product {
+  id           Int      @id @default(autoincrement())
+  description  String   @db.VarChar(100) @default("No description") // descripción con límite razonable
+  price_sale   Decimal  @db.Decimal(10, 2) // precio con 2 decimales, formato estándar
+  cost_price   Decimal  @db.Decimal(10, 2)
+  stock        Int @default(0) // stock con valor por defecto
+  id_category  Int
+  category Category @relation(fields: [id_category], references: [id]) // relacion donde actua la forania
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String @unique @db.VarChar(50) 
+  //relaciones
+  products Product[] // "Una categoria puede tener varios productos asociados."
+}

@@ -1,72 +1,96 @@
-import { pool } from "../db.js";
+import { prisma, Prisma } from "../config/db.js";
+import { createError } from "../utils/errors.js";
+import { validateAndConvertId } from "../utils/validate.js";
 
-export async function getAllCategory() {
+export const getAllCategory = async () => {
   try {
-    const result = await pool.query("SELECT * FROM Category");
+    const result = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
     return result;
   } catch (error) {
-    console.error("Error en getAllCategory:", error);
-    throw error;
+    throw createError("INTERNAL_SERVER_ERROR");
   }
-}
+};
 
-export async function getCategoryById(id) {
+export const getCategoryById = async (id) => {
+  const numericId = validateAndConvertId(id);
   try {
-    const result = await pool.query(
-      "SELECT id, name FROM category WHERE id = $1",
-      [id]
-    );
-    return result;
-  } catch (error) {
-    console.error("Error en getCategoryById:", error);
-    throw error;
-  }
-}
+    const category = await prisma.category.findUnique({
+      where: { id: numericId },
+      select: {
+        name: true,
+      },
+    });
 
-export async function createCategory(data) {
-  try {
-    const { rows } = await pool.query(
-      `INSERT INTO Category (name)
-       VALUES ($1) RETURNING *`,
-      [data.name]
-    );
-    return rows[0];
-  } catch (error) {
-    console.error("Error en createCategory:", error);
-    throw error;
-  }
-}
-
-export async function deleteCategory(id) {
-  try {
-    const result = await pool.query("DELETE FROM Category WHERE id = $1", [id]);
-    return result; // result.rowCount lo usas en el controller
-  } catch (error) {
-    console.error("Error en deleteCategory:", error);
-    throw error;
-  }
-}
-
-export async function updateCategory(id, data) {
-  try {
-    const keys = Object.keys(data);
-    const values = Object.values(data);
-
-    if (keys.length === 0) {
-      throw new Error("No se enviaron campos para actualizar.");
+    if (!category) {
+      throw createError("RECORD_NOT_FOUND");
     }
 
-    // Crear el SET dinámicamente: name = $1, ...
-    const setClause = keys.map((key, idx) => `${key} = $${idx + 1}`).join(", ");
-    const query = `UPDATE category SET ${setClause} WHERE id = $${
-      keys.length + 1
-    } RETURNING *`;
-
-    values.push(id); // Añadir el id al final para el WHERE
-    const result = await pool.query(query, values);
-    return result;
+    return category;
   } catch (error) {
-    console.error("Error en updateCategory:", error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw createError("RECORD_NOT_FOUND");
+    }
+
     throw error;
   }
-}
+};
+
+export const createCategory = async (reqBody) => {
+  try {
+    const { name } = reqBody;
+
+    data = {
+      name,
+    };
+    const category = await prisma.category.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    return category;
+  } catch (error) {
+    throw createError("INTERNAL_SERVER_ERROR");
+  }
+};
+
+export const deleteCategory = async (id) => {
+  const numericId = validateAndConvertId(id);
+  try {
+    const deleteCategory = await prisma.category.delete({
+      where: { id: numericId },
+    });
+    return deleteCategory;
+  } catch (error) {
+    throw createError("INTERNAL_SERVER_ERROR");
+  }
+};
+
+export const updateCategory = async (id, data) => {
+  const numericId = validateAndConvertId(id);
+  try {
+    const updateData = await prisma.category.findUnique({
+      where: { id: numericId, data },
+    });
+
+    return updateData;
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw createError("RECORD_NOT_FOUND");
+    }
+
+    throw error;
+  }
+};
