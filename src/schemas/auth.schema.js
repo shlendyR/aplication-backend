@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-export const createUserSchema = z.object({
+export const loginSchema = z.object({
+  email: z.string().email({ message: "Correo inválido" }),
+  password: z.string().min(1, { message: "La contraseña es requerida" }),
+});
+
+export const registerSchema = z.object({
   name: z
     .string()
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
@@ -19,5 +24,3 @@ export const createUserSchema = z.object({
     .number()
     .int({ message: "El ID del rol debe ser un número entero" }),
 });
-
-export const updateUserSchema = createUserSchema.partial();

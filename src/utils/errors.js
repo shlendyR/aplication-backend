@@ -24,6 +24,16 @@ const errorList = {
     message: "Credenciales inválidas",
     error: "BadRequest",
   },
+  NO_TOKEN_PROVIDED: {
+    status: 401,
+    message: "No se proporcionó token",
+    error: "Unauthorized",
+  },
+  INVALID_TOKEN: {
+    status: 401,
+    message: "Token inválido",
+    error: "Unauthorized",
+  },
 };
 
 export function createError(code) {

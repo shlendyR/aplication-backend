@@ -6,16 +6,22 @@ import {
   createCategory,
   deleteCategory,
 } from "../controllers/category.controller.js";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "../schemas/category.schemas.js";
+import { verifyToken } from "../middlewares/auth.js";
+import { validate } from "../middlewares/validateInput.js";
 const router = Router();
 
-router.get("/", getAllCategory);
+router.get("/", verifyToken, getAllCategory);
 
-router.get("/:id", getCategoryById);
+router.get("/:id", verifyToken, getCategoryById);
 
-router.post("/", createCategory);
+router.post("/", verifyToken, validate(createCategorySchema), createCategory);
 
-router.delete("/:id", deleteCategory);
+router.delete("/:id", verifyToken, deleteCategory);
 
-router.put("/:id", updateCategory);
+router.put("/:id", verifyToken, validate(updateCategorySchema), updateCategory);
 
 export default router;

@@ -3,10 +3,15 @@ import { createError } from "../utils/errors.js";
 import { validateAndConvertId } from "../utils/validate.js";
 import { BcryptAdapter } from "../adapters/bcryptAdapter.js";
 
-
 export const createUser = async (reqBody) => {
   try {
     const { name, email, password, birthdate, id_rol, phone } = reqBody;
+
+    const userExists = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (userExists) throw createError("EMAIL_IN_USE");
+
     const hashedPassword = await BcryptAdapter.hash(password);
     const data = {
       name,
@@ -21,22 +26,15 @@ export const createUser = async (reqBody) => {
       data,
       include: {
         rol: {
-          select: {
-            name: true,
-          },
+          select: { name: true },
         },
       },
     });
     return user;
   } catch (error) {
     console.error("Error en createUser:", error);
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002" &&
-      error.meta?.target?.includes("email") // verifica que es el campo email
-    ) {
-      throw createError("EMAIL_IN_USE");
-    }
+    // Si el error ya tiene status, es un error personalizado, relánzalo directamente.
+    if (error.status) throw error;
     throw createError("INTERNAL_SERVER_ERROR");
   }
 };
