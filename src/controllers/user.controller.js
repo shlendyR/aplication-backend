@@ -1,6 +1,6 @@
 import {
   createUser as createUserModel,
-  getAllUsers as userModel,
+  getAllUsers as usersModel,
   getUserById as getUserByIdModel,
   deleteUser as deleteUserModel,
   updateUser as updateUserModel,
@@ -17,9 +17,10 @@ export const createUser = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await userModel();
+    const users = await usersModel();
     res.status(200).json({ data: users });
   } catch (error) {
+    console.error("Error en createUser:", error);
     next(error);
   }
 };
@@ -36,7 +37,7 @@ export const getUserById = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   try {
     const deletedUser = await deleteUserModel(req.params.id);
-    res.status(200).json({ data: deletedUser });
+    res.status(200).json({ message: "Usuario eliminado" });
   } catch (error) {
     next(error);
   }

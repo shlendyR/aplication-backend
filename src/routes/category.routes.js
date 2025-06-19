@@ -12,16 +12,26 @@ import {
 } from "../schemas/category.schemas.js";
 import { verifyToken } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validateInput.js";
-const router = Router();
+const categoryRoutes = Router();
 
-router.get("/", verifyToken, getAllCategory);
+categoryRoutes.get("/", verifyToken, getAllCategory);
 
-router.get("/:id", verifyToken, getCategoryById);
+categoryRoutes.get("/:id", verifyToken, getCategoryById);
 
-router.post("/", verifyToken, validate(createCategorySchema), createCategory);
+categoryRoutes.post(
+  "/",
+  verifyToken,
+  validate(createCategorySchema),
+  createCategory
+);
 
-router.delete("/:id", verifyToken, deleteCategory);
+categoryRoutes.delete("/:id", verifyToken, deleteCategory);
 
-router.put("/:id", verifyToken, validate(updateCategorySchema), updateCategory);
+categoryRoutes.put(
+  "/:id",
+  verifyToken,
+  validate(updateCategorySchema),
+  updateCategory
+);
 
-export default router;
+export default categoryRoutes;

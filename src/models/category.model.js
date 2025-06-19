@@ -78,8 +78,9 @@ export const deleteCategory = async (id) => {
 export const updateCategory = async (id, data) => {
   const numericId = validateAndConvertId(id);
   try {
-    const updateData = await prisma.category.findUnique({
-      where: { id: numericId, data },
+    const updateData = await prisma.category.update({
+      where: { id: numericId },
+      data,
     });
 
     return updateData;

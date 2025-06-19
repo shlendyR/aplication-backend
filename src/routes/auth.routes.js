@@ -7,10 +7,10 @@ import {
 import { loginSchema, registerSchema } from "../schemas/auth.schema.js";
 import { validate } from "../middlewares/validateInput.js";
 
-const router = express.Router();
+const authRoutes = express.Router();
 
-router.get("/", getCurrentDate);
-router.post("/login", validate(loginSchema), login);
-router.post("/register", validate(registerSchema), register);
+authRoutes.get("/", getCurrentDate);
+authRoutes.post("/login", validate(loginSchema), login);
+authRoutes.post("/register", validate(registerSchema), register);
 
-export default router;
+export default authRoutes;

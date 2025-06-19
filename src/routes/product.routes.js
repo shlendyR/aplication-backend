@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { getProductsByCategory } from "../controllers/product.controller.js";
+import { verifyToken } from "../middlewares/auth.js";
 
-const router = Router();
+const productRoutes = Router();
 
-router.get("/category/:id", getProductsByCategory);
+productRoutes.get("/category/:id", verifyToken, getProductsByCategory);
 
-export default router;
+export default productRoutes;

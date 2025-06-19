@@ -10,16 +10,16 @@ import { createUserSchema, updateUserSchema } from "../schemas/users.schema.js";
 import { verifyToken } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validateInput.js";
 
-const router = express.Router();
+const userRoutes = express.Router();
 
-router.post("/", verifyToken, validate(createUserSchema), createUser);
+userRoutes.post("/", verifyToken, validate(createUserSchema), createUser);
 
-router.get("/", getAllUsers);
+userRoutes.get("/", getAllUsers);
 
-router.get("/:id", getUserById);
+userRoutes.get("/:id", getUserById);
 
-router.delete("/:id", verifyToken, deleteUser);
+userRoutes.delete("/:id", verifyToken, deleteUser);
 
-router.put("/:id", verifyToken, validate(updateUserSchema), updateUser);
+userRoutes.put("/:id", verifyToken, validate(updateUserSchema), updateUser);
 
-export default router;
+export default userRoutes;
