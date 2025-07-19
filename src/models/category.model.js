@@ -47,9 +47,8 @@ export const createCategory = async (reqBody) => {
   try {
     const { name } = reqBody;
 
-    data = {
-      name,
-    };
+    const data = { name };
+
     const category = await prisma.category.create({
       data,
       select: {
@@ -59,6 +58,13 @@ export const createCategory = async (reqBody) => {
     });
     return category;
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002" &&
+      error.meta?.target?.includes("name")
+    ) {
+      throw createError("CATEGORY_ALREADY_EXISTS");
+    }
     throw createError("INTERNAL_SERVER_ERROR");
   }
 };

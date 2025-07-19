@@ -18,11 +18,9 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const { token } = await loginUserModel(req.body);
+    const { token, name, id_role } = await loginUserModel(req.body);
     res.status(200).json({
-      status: 200,
-      message: "Login exitoso",
-      data: { token },
+      data: { token, name, id_role },
     });
   } catch (error) {
     next(error);

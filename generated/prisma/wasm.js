@@ -127,12 +127,12 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   password: 'password',
   birthdate: 'birthdate',
-  id_rol: 'id_rol'
+  id_role: 'id_role'
 };
 
-exports.Prisma.RolScalarFieldEnum = {
-  id: 'id',
-  name: 'name'
+exports.Prisma.RoleScalarFieldEnum = {
+  id_role: 'id_role',
+  name_role: 'name_role'
 };
 
 exports.Prisma.ProductScalarFieldEnum = {
@@ -167,7 +167,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Rol: 'Rol',
+  role: 'role',
   Product: 'Product',
   Category: 'Category'
 };

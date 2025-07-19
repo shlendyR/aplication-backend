@@ -5,7 +5,7 @@ import { createError } from "../utils/errors.js";
 
 export const registerUser = async (reqBody) => {
   try {
-    const { name, email, password, birthdate, id_rol, phone } = reqBody;
+    const { name, email, password, birthdate, id_role, phone } = reqBody;
 
     const hashedPassword = await BcryptAdapter.hash(password);
 
@@ -14,22 +14,23 @@ export const registerUser = async (reqBody) => {
       email,
       password: hashedPassword,
       birthdate,
-      id_rol,
+      id_role,
       phone,
     };
 
     const user = await prisma.user.create({
       data,
       include: {
-        rol: {
+        role: {
           select: {
-            name: true,
+            name_role: true,
           },
         },
       },
     });
     return user;
   } catch (error) {
+    console.error("Error original en registerUser:", error); // <-- Log detallado
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002" &&
@@ -43,8 +44,17 @@ export const registerUser = async (reqBody) => {
 
 export const loginUser = async ({ email, password }) => {
   const user = await prisma.user.findUnique({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      phone: true,
+      id_role: true,
+      password: true,
+      birthdate: true,
+      role: true,
+    },
     where: { email },
-    include: { rol: { select: { name: true } } },
   });
 
   const isValid =
@@ -55,8 +65,8 @@ export const loginUser = async ({ email, password }) => {
     {
       id: user.id,
       email,
-      id_rol: user.id_rol,
-      rol_name: user.rol.name,
+      id_role: user.id_role, // igual que en el modelo
+      rol_name: user.role.name_role, // corresponde al campo de relación 'rol'
     },
     process.env.JWT_SECRET,
     {

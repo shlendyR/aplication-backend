@@ -9,7 +9,7 @@ export const getProfile = async (userId) => {
         email: true,
         name: true,
         phone: true,
-        rol: {
+        role: {
           select: {
             name: true,
           },

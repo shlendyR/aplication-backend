@@ -5,7 +5,7 @@ import { BcryptAdapter } from "../adapters/bcryptAdapter.js";
 
 export const createUser = async (reqBody) => {
   try {
-    const { name, email, password, birthdate, id_rol, phone } = reqBody;
+    const { name, email, password, birthdate, id_role, phone } = reqBody;
 
     const userExists = await prisma.user.findUnique({
       where: { email },
@@ -18,15 +18,15 @@ export const createUser = async (reqBody) => {
       email,
       password: hashedPassword,
       birthdate: new Date(birthdate),
-      id_rol,
+      id_role,
       phone,
     };
 
     const user = await prisma.user.create({
       data,
       include: {
-        rol: {
-          select: { name: true },
+        role: {
+          select: { name_role: true },
         },
       },
     });
@@ -43,9 +43,9 @@ export const getAllUsers = async () => {
   try {
     const users = await prisma.user.findMany({
       include: {
-        rol: {
+        role: {
           select: {
-            name: true,
+            name_role: true,
           },
         },
       },
@@ -62,9 +62,9 @@ export const getUserById = async (id) => {
     const user = await prisma.user.findUnique({
       where: { id: numericId },
       include: {
-        rol: {
+        role: {
           select: {
-            name: true,
+            name_role: true,
           },
         },
       },

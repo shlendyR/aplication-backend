@@ -15,7 +15,7 @@ export const createUserSchema = z.object({
   birthdate: z.preprocess((arg) => {
     if (typeof arg === "string" || arg instanceof Date) return new Date(arg);
   }, z.date({ required_error: "La fecha de nacimiento es requerida" })),
-  id_rol: z
+  id_role: z
     .number()
     .int({ message: "El ID del rol debe ser un número entero" }),
 });

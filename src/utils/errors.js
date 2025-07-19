@@ -34,6 +34,16 @@ const errorList = {
     message: "Token inválido",
     error: "Unauthorized",
   },
+  CATEGORY_ALREADY_EXISTS: {
+    status: 400,
+    message: "La categoría ya existe",
+    error: "BadRequest",
+  },
+  PRODUCT_ALREADY_EXISTS: {
+    status: 400,
+    message: "el producto ya existe",
+    error: "BadRequest",
+  },
 };
 
 export function createError(code) {

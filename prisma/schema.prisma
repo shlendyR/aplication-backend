@@ -21,20 +21,20 @@ model User {
   phone        String?  @unique @db.VarChar(20)
   password  String
   birthdate  DateTime
-  id_rol Int
+  id_role Int
   //relaciones
-  rol Rol @relation(fields: [id_rol], references: [id]) // relacion donde actua la forania
+  role role @relation(fields: [id_role], references: [id_role]) // relacion donde actua la forania
 }
 
-model Rol {
-  id        Int  @id @default(autoincrement())
-  name      String
+model role {
+  id_role      Int  @id @default(autoincrement())
+  name_role    String@unique @db.VarChar(50) 
   //relaciones
   users User[] // "Un rol puede tener varios usuarios asociados." 
 }
 model Product {
   id           Int      @id @default(autoincrement())
-  description  String   @db.VarChar(100) @default("No description") // descripción con límite razonable
+  description  String   @unique @db.VarChar(100) @default("No description") // descripción con límite razonable
   price_sale   Decimal  @db.Decimal(10, 2) // precio con 2 decimales, formato estándar
   cost_price   Decimal  @db.Decimal(10, 2)
   stock        Int @default(0) // stock con valor por defecto

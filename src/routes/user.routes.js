@@ -14,7 +14,7 @@ const userRoutes = express.Router();
 
 userRoutes.post("/", verifyToken, validate(createUserSchema), createUser);
 
-userRoutes.get("/", getAllUsers);
+userRoutes.get("/", verifyToken, getAllUsers);
 
 userRoutes.get("/:id", getUserById);
 
