@@ -9,6 +9,7 @@ import productRoutes from "./routes/product.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import roleRoutes from "./routes/role.routes.js";
+import saleRoutes from "./routes/sale.routes.js"; // Asegúrate de importar saleRoutes si lo necesitas
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 const app = express();
@@ -21,6 +22,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/role", roleRoutes);
+app.use("/api/sales", saleRoutes); // Asegúrate de importar saleRoutes si lo necesitas
 
 app.use(errorHandler);
 

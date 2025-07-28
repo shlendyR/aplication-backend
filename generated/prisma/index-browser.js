@@ -149,6 +149,38 @@ exports.Prisma.CategoryScalarFieldEnum = {
   name: 'name'
 };
 
+exports.Prisma.SaleScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  total: 'total',
+  description: 'description',
+  status: 'status',
+  payment_method: 'payment_method',
+  id_user: 'id_user'
+};
+
+exports.Prisma.SaleDetailScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  subtotal: 'subtotal',
+  id_product: 'id_product',
+  id_sale: 'id_sale'
+};
+
+exports.Prisma.AccountsReceivableScalarFieldEnum = {
+  id: 'id',
+  expiration_date: 'expiration_date',
+  id_sale: 'id_sale'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  id_accounts_receivable: 'id_accounts_receivable',
+  amount_paid: 'amount_paid',
+  payment_date: 'payment_date',
+  payment_method: 'payment_method'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -163,13 +195,26 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.SaleStatus = exports.$Enums.SaleStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED'
+};
 
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  TRANSFER: 'TRANSFER',
+  CASH: 'CASH',
+  CARD: 'CARD'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   role: 'role',
   Product: 'Product',
-  Category: 'Category'
+  Category: 'Category',
+  Sale: 'Sale',
+  SaleDetail: 'SaleDetail',
+  AccountsReceivable: 'AccountsReceivable',
+  Payment: 'Payment'
 };
 
 /**
