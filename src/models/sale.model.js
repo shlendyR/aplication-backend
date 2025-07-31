@@ -52,7 +52,8 @@ export const getSaleById = async (id) => {
 
 export const createSale = async (reqBody) => {
   try {
-    const { date, total, description, status, id_user } = reqBody;
+    const { date, total, description, status, payment_method, id_user } =
+      reqBody;
 
     const data = {
       date,
@@ -77,6 +78,7 @@ export const createSale = async (reqBody) => {
     });
     return sale;
   } catch (error) {
+    console.error("Error Prisma al crear venta:", error);
     throw createError("INTERNAL_SERVER_ERROR");
   }
 };

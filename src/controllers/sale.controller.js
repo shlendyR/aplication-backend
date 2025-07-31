@@ -25,7 +25,7 @@ export const getSaleById = async (req, res, next) => {
 
 export const createSale = async (req, res, next) => {
   try {
-    const { date, total, description, status, Payment_method, id_user } =
+    const { date, total, description, status, payment_method, id_user } =
       req.body;
 
     const newSale = await createSaleModel({
@@ -33,7 +33,7 @@ export const createSale = async (req, res, next) => {
       total,
       description,
       status,
-      Payment_method,
+      payment_method,
       id_user,
     });
 
@@ -43,5 +43,6 @@ export const createSale = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+    console.error("Error creating sale:", error);
   }
 };
