@@ -1,4 +1,3 @@
-import { PaymentMethod } from "../../generated/prisma/index.js";
 import {
   getAllSale as saleModel,
   getSaleById as getSaleByIdModel,
