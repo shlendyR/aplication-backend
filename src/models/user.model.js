@@ -7,10 +7,17 @@ export const createUser = async (reqBody) => {
   try {
     const { name, email, password, birthdate, id_role, phone } = reqBody;
 
-    const userExists = await prisma.user.findUnique({
+    const emailExists = await prisma.user.findUnique({
       where: { email },
     });
-    if (userExists) throw createError("EMAIL_IN_USE");
+
+    if (emailExists) throw createError("EMAIL_IN_USE");
+
+    const phoneExists = await prisma.user.findUnique({
+      where: { phone },
+    });
+
+    if (phoneExists) throw createError("PHONE_IN_USE");
 
     const hashedPassword = await BcryptAdapter.hash(password);
     const data = {

@@ -1,6 +1,6 @@
 const errorList = {
   EMAIL_IN_USE: {
-    status: 400,
+    status: 409,
     message: "El correo ya está en uso",
     error: "BadRequest",
   },
@@ -42,6 +42,11 @@ const errorList = {
   PRODUCT_ALREADY_EXISTS: {
     status: 400,
     message: "el producto ya existe",
+    error: "BadRequest",
+  },
+  PHONE_IN_USE: {
+    status: 409,
+    message: "El numero de telefono ya está en uso",
     error: "BadRequest",
   },
 };
