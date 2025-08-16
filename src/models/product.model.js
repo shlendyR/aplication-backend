@@ -45,6 +45,7 @@ export const getProducts = async () => {
   try {
     const product = await prisma.product.findMany({
       select: {
+        id: true,
         description: true,
         price_sale: true,
         cost_price: true,
